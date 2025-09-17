@@ -89,7 +89,7 @@ class ReportController extends Controller
         foreach($invoices as $invoice) {
             $activities->push([
                 'type' => 'sale',
-                'description' => "فاتورة رقم {$invoice->invoice_number} بقيمة {$invoice->net_amount} ر.س",
+                'description' => "فاتورة رقم {$invoice->invoice_number} بقيمة {$invoice->net_amount} ج.م",
                 'user' => $invoice->user->name,
                 'store' => $invoice->store->name,
                 'created_at' => $invoice->created_at

@@ -33,13 +33,14 @@ Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(fun
 
     // التقارير
     Route::prefix('reports')->group(function () {
-        Route::get('/', [ReportController::class, 'index'])->name('superadmin.reports.index');
-        Route::get('/sales', [ReportController::class, 'sales'])->name('superadmin.reports.sales');
-        Route::get('/daily', [ReportController::class, 'daily'])->name('superadmin.reports.daily');
-        Route::get('/inventory', [ReportController::class, 'inventory'])->name('superadmin.reports.inventory');
-        Route::get('/activities', [ReportController::class, 'activities'])->name('superadmin.reports.activities');
-        Route::get('/weekly', [ReportController::class, 'weekly'])->name('superadmin.reports.weekly');
-        Route::get('/monthly', [ReportController::class, 'monthly'])->name('superadmin.reports.monthly');
+        // تقارير السوبر أدمن
+        Route::get('/reports', [App\Http\Controllers\SuperAdmin\ReportController::class, 'index'])->name('superadmin.reports.index');
+        Route::get('/reports/sales', [App\Http\Controllers\SuperAdmin\ReportController::class, 'sales'])->name('superadmin.reports.sales');
+        Route::get('/reports/daily', [App\Http\Controllers\SuperAdmin\ReportController::class, 'daily'])->name('superadmin.reports.daily');
+        Route::get('/reports/weekly', [App\Http\Controllers\SuperAdmin\ReportController::class, 'weekly'])->name('superadmin.reports.weekly');
+        Route::get('/reports/monthly', [App\Http\Controllers\SuperAdmin\ReportController::class, 'monthly'])->name('superadmin.reports.monthly');
+        Route::get('/reports/inventory', [App\Http\Controllers\SuperAdmin\ReportController::class, 'inventory'])->name('superadmin.reports.inventory');
+        Route::get('/reports/activities', [App\Http\Controllers\SuperAdmin\ReportController::class, 'activities'])->name('superadmin.reports.activities');
     });
 });
 

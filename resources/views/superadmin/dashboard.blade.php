@@ -72,7 +72,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title">مبيعات اليوم</h6>
-                        <h3 class="mb-0">{{ number_format($todayRevenue, 2) }} ر.س</h3>
+                        <h3 class="mb-0">{{ number_format($todayRevenue, 2) }} ج.م</h3>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-dollar-sign fa-2x"></i>
@@ -87,7 +87,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title">مبيعات الشهر</h6>
-                        <h3 class="mb-0">{{ number_format($monthlyRevenue, 2) }} ر.س</h3>
+                        <h3 class="mb-0">{{ number_format($monthlyRevenue, 2) }} ج.م</h3>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-chart-line fa-2x"></i>
