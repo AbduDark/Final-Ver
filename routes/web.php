@@ -2,7 +2,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\{AdminDashboardController, ProductController, CategoryController, ReportController as AdminReportController, ReturnController, MaintenanceController, TransferController, PackageController, TreasuryController};
 use App\Http\Controllers\Cashier\{CashierDashboardController, InvoiceController};
 use App\Http\Controllers\SuperAdmin\{SuperAdminDashboardController, StoreController, UserController, ReportController};
 use App\Http\Controllers\Admin\{ProductController, CategoryController, ReportController as AdminReportController, ReturnController, MaintenanceController, TransferController, PackageController, TreasuryController};

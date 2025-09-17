@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Controllers\Cashier;
@@ -36,9 +37,14 @@ class CashierDashboardController extends Controller
             ->limit(10)
             ->get();
 
+        // المنتجات منخفضة المخزون
+        $lowStockProducts = Product::where('store_id', $store->id)
+            ->whereColumn('quantity', '<=', 'min_quantity')
+            ->count();
+
         return view('cashier.dashboard', compact(
             'store', 'todayInvoices', 'todayRevenue', 
-            'pendingTransfers', 'recentInvoices'
+            'pendingTransfers', 'recentInvoices', 'lowStockProducts'
         ));
     }
 }

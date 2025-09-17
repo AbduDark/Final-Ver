@@ -45,11 +45,15 @@ class AuthController extends Controller
 
     private function redirectToDashboard(User $user)
     {
-        return match($user->type) {
-            'super_admin' => redirect()->route('superadmin.dashboard'),
-            'admin' => redirect()->route('admin.dashboard'),
-            'cashier' => redirect()->route('cashier.dashboard'),
-            default => redirect()->route('login'),
-        };
+        switch($user->type) {
+            case 'super_admin':
+                return redirect()->route('superadmin.dashboard');
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'cashier':
+                return redirect()->route('cashier.dashboard');
+            default:
+                return redirect()->route('login');
+        }
     }
 }

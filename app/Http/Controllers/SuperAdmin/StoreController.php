@@ -131,4 +131,41 @@ class StoreController extends Controller
         return redirect()->route('superadmin.stores.users', $store)
             ->with('success', 'تم إضافة المستخدم بنجاح');
     }
+
+    public function updateUser(Request $request, Store $store, User $user)
+    {
+        $this->authorize('view', $store);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'type' => 'required|in:admin,cashier',
+        ]);
+
+        $data = $request->only(['name', 'email', 'type']);
+
+        if ($request->filled('password')) {
+            $request->validate(['password' => 'string|min:8|confirmed']);
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('superadmin.stores.users', $store)
+            ->with('success', 'تم تحديث المستخدم بنجاح');
+    }
+
+    public function destroyUser(Store $store, User $user)
+    {
+        $this->authorize('view', $store);
+
+        if ($user->store_id !== $store->id) {
+            abort(404);
+        }
+
+        $user->delete();
+
+        return redirect()->route('superadmin.stores.users', $store)
+            ->with('success', 'تم حذف المستخدم بنجاح');
+    }
 }

@@ -100,4 +100,68 @@ class ReportController extends Controller
 
         return view('superadmin.reports.activities', compact('activities'));
     }
+
+    public function weekly(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $startOfWeek = $request->get('start_date', Carbon::now()->startOfWeek());
+        $endOfWeek = $request->get('end_date', Carbon::now()->endOfWeek());
+
+        $weeklyData = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->with(['store', 'user'])
+            ->get();
+
+        $totalWeeklyRevenue = $weeklyData->sum('net_amount');
+        $dailyBreakdown = $weeklyData->groupBy(function($date) {
+            return Carbon::parse($date->created_at)->format('Y-m-d');
+        })->map(function($items) {
+            return [
+                'total' => $items->sum('net_amount'),
+                'count' => $items->count()
+            ];
+        });
+
+        return view('superadmin.reports.weekly', compact(
+            'weeklyData', 'totalWeeklyRevenue', 'dailyBreakdown', 'startOfWeek', 'endOfWeek'
+        ));
+    }
+
+    public function monthly(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $month = $request->get('month', Carbon::now()->format('Y-m'));
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+        $endOfMonth = Carbon::parse($month)->endOfMonth();
+
+        $monthlyData = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->with(['store', 'user'])
+            ->get();
+
+        $totalMonthlyRevenue = $monthlyData->sum('net_amount');
+        $storesMonthlyStats = $monthlyData->groupBy('store_id')->map(function($items) {
+            return [
+                'store' => $items->first()->store,
+                'total' => $items->sum('net_amount'),
+                'count' => $items->count()
+            ];
+        });
+
+        $weeklyBreakdown = $monthlyData->groupBy(function($date) {
+            return Carbon::parse($date->created_at)->format('W');
+        })->map(function($items) {
+            return [
+                'total' => $items->sum('net_amount'),
+                'count' => $items->count()
+            ];
+        });
+
+        return view('superadmin.reports.monthly', compact(
+            'monthlyData', 'totalMonthlyRevenue', 'storesMonthlyStats', 
+            'weeklyBreakdown', 'month'
+        ));
+    }
 }
