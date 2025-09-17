@@ -51,10 +51,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('categories', CategoryController::class, ['as' => 'admin']);
 
     // إدارة المنتجات
-    Route::resource('products', ProductController::class, ['as' => 'admin']);
     Route::get('/products/low-stock', [ProductController::class, 'lowStock'])->name('admin.products.low-stock');
     Route::post('/products/create-category', [ProductController::class, 'createCategory'])->name('admin.products.create-category');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::resource('products', ProductController::class, ['as' => 'admin']);
 
 
     // إدارة الفواتير - الأدمن له نفس صلاحيات الكاشير وأكثر
