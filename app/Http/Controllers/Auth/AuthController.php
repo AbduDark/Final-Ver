@@ -25,14 +25,25 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return $this->redirectToDashboard(Auth::user());
+            
+            $user = Auth::user();
+            
+            // إزالة أي sessions قديمة
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            // تسجيل دخول جديد
+            Auth::login($user);
+            $request->session()->regenerate();
+            
+            return $this->redirectToDashboard($user);
         }
 
         return back()->withErrors([
             'email' => 'بيانات الدخول غير صحيحة.',
-        ]);
+        ])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
