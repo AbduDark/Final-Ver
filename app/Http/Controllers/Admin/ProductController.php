@@ -25,6 +25,27 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
+    public function createCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $user = auth()->user();
+        
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'store_id' => $user->store_id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'category' => $category
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
