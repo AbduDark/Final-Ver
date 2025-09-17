@@ -55,14 +55,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/products/low-stock', [ProductController::class, 'lowStock'])->name('admin.products.low-stock');
     Route::post('/products/create-category', [ProductController::class, 'createCategory'])->name('admin.products.create-category');
 
-    // إدارة الفواتير
-    Route::get('/invoices', [InvoiceController::class, 'index'])->name('admin.invoices.index');
-    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('admin.invoices.create');
-    Route::post('/invoices', [InvoiceController::class, 'store'])->name('admin.invoices.store');
-    Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('admin.invoices.show');
-    Route::get('/invoices/search', [InvoiceController::class, 'search'])->name('admin.invoices.search');
-    Route::get('/invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('admin.invoices.print');
-    Route::get('/products/search', [InvoiceController::class, 'searchProducts'])->name('admin.products.search');
+    // إدارة الفواتير - الأدمن له نفس صلاحيات الكاشير وأكثر
+    Route::get('/invoices', [\App\Http\Controllers\Cashier\InvoiceController::class, 'index'])->name('admin.invoices.index');
+    Route::get('/invoices/create', [\App\Http\Controllers\Cashier\InvoiceController::class, 'create'])->name('admin.invoices.create');
+    Route::post('/invoices', [\App\Http\Controllers\Cashier\InvoiceController::class, 'store'])->name('admin.invoices.store');
+    Route::get('/invoices/{invoice}', [\App\Http\Controllers\Cashier\InvoiceController::class, 'show'])->name('admin.invoices.show');
+    Route::get('/invoices/{invoice}/print', [\App\Http\Controllers\Cashier\InvoiceController::class, 'print'])->name('admin.invoices.print');
+    Route::get('/invoices/search', [\App\Http\Controllers\Cashier\InvoiceController::class, 'search'])->name('admin.invoices.search');
+    Route::get('/products/search', [\App\Http\Controllers\Cashier\InvoiceController::class, 'searchProducts'])->name('admin.products.search');
 
     // المرتجعات
     Route::resource('returns', ReturnController::class, ['as' => 'admin']);

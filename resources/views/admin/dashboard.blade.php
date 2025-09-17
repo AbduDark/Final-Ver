@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'لوحة تحكم المتجر - ' . ($store->name ?? 'المتجر'))
@@ -10,47 +9,47 @@
         <i class="fas fa-tachometer-alt me-2"></i>
         لوحة التحكم
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.products.index') }}">
         <i class="fas fa-box me-2"></i>
         المنتجات
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.categories.index') }}">
         <i class="fas fa-tags me-2"></i>
         الفئات
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.invoices.index') }}">
         <i class="fas fa-file-invoice me-2"></i>
         الفواتير
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.returns.index') }}">
         <i class="fas fa-undo me-2"></i>
         المرتجعات
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.maintenance.index') }}">
         <i class="fas fa-tools me-2"></i>
         الصيانة
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.transfers.index') }}">
         <i class="fas fa-exchange-alt me-2"></i>
         التحويلات
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.packages.index') }}">
         <i class="fas fa-box-open me-2"></i>
         الباقات
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.treasury.index') }}">
         <i class="fas fa-cash-register me-2"></i>
         الخزينة
     </a>
-    
+
     <a class="nav-link" href="{{ route('admin.reports.index') }}">
         <i class="fas fa-chart-bar me-2"></i>
         التقارير
@@ -88,7 +87,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card bg-warning text-white">
             <div class="card-body text-center">
@@ -98,7 +97,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card bg-success text-white">
             <div class="card-body text-center">
@@ -108,7 +107,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card bg-info text-white">
             <div class="card-body text-center">
@@ -131,7 +130,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card bg-danger text-white">
             <div class="card-body text-center">
@@ -141,7 +140,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card bg-dark text-white">
             <div class="card-body text-center">
@@ -151,7 +150,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="card stats-card" style="background: linear-gradient(45deg, #667eea, #764ba2);">
             <div class="card-body text-center text-white">
@@ -203,7 +202,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-6 mb-4">
         <div class="card">
             <div class="card-header">
