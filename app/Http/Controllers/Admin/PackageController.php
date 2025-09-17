@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -14,7 +13,7 @@ class PackageController extends Controller
         $user = auth()->user();
         $packages = Package::where('store_id', $user->store_id)
             ->paginate(20);
-        
+
         return view('admin.packages.index', compact('packages'));
     }
 
@@ -33,7 +32,7 @@ class PackageController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         Package::create([
             'name' => $request->name,
             'network' => $request->network,
@@ -69,7 +68,7 @@ class PackageController extends Controller
     public function destroy(Package $package)
     {
         $package->delete();
-        
+
         return redirect()->route('admin.packages.index')
             ->with('success', 'تم حذف الباقة بنجاح');
     }

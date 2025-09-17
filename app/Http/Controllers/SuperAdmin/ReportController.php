@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -20,13 +19,13 @@ class ReportController extends Controller
         $superAdmin = auth()->user();
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
         $endDate = $request->get('end_date', Carbon::now());
-        
+
         $salesData = Invoice::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->whereBetween('created_at', [$startDate, $endDate])
             ->with(['store', 'user'])
             ->get();
-        
+
         $totalSales = $salesData->sum('net_amount');
         $storesSales = $salesData->groupBy('store_id')->map(function($items) {
             return [
@@ -35,7 +34,7 @@ class ReportController extends Controller
                 'count' => $items->count()
             ];
         });
-        
+
         return view('superadmin.reports.sales', compact(
             'salesData', 'totalSales', 'storesSales', 'startDate', 'endDate'
         ));
@@ -45,32 +44,32 @@ class ReportController extends Controller
     {
         $superAdmin = auth()->user();
         $date = $request->get('date', Carbon::today());
-        
+
         $dailyData = Invoice::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->whereDate('created_at', $date)
             ->with(['store', 'user', 'items.product'])
             ->get();
-        
+
         return view('superadmin.reports.daily', compact('dailyData', 'date'));
     }
 
     public function inventory()
     {
         $superAdmin = auth()->user();
-        
+
         $products = Product::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with(['store', 'category'])->get();
-        
+
         $totalValue = $products->sum(function($product) {
             return $product->quantity * $product->purchase_price;
         });
-        
+
         $lowStockProducts = $products->filter(function($product) {
             return $product->quantity <= $product->min_quantity;
         });
-        
+
         return view('superadmin.reports.inventory', compact(
             'products', 'totalValue', 'lowStockProducts'
         ));
@@ -79,14 +78,14 @@ class ReportController extends Controller
     public function activities()
     {
         $superAdmin = auth()->user();
-        
+
         $activities = collect();
-        
+
         // إضافة أنشطة المبيعات
         $invoices = Invoice::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with(['store', 'user'])->latest()->limit(50)->get();
-        
+
         foreach($invoices as $invoice) {
             $activities->push([
                 'type' => 'sale',
@@ -96,9 +95,9 @@ class ReportController extends Controller
                 'created_at' => $invoice->created_at
             ]);
         }
-        
+
         $activities = $activities->sortByDesc('created_at')->take(100);
-        
+
         return view('superadmin.reports.activities', compact('activities'));
     }
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -17,7 +16,7 @@ class TransferController extends Controller
             ->with('user')
             ->latest()
             ->paginate(20);
-        
+
         return view('admin.transfers.index', compact('transfers'));
     }
 
@@ -36,7 +35,7 @@ class TransferController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         DB::transaction(function() use ($request, $user) {
             $transfer = Transfer::create([
                 'transfer_number' => $this->generateTransferNumber(),
@@ -48,11 +47,11 @@ class TransferController extends Controller
                 'store_id' => $user->store_id,
                 'user_id' => $user->id,
             ]);
-            
+
             // تحديث الخزينة
             $treasury = Treasury::firstOrCreate(['store_id' => $user->store_id]);
             $treasury->increment('current_balance', $request->amount);
-            
+
             // تسجيل حركة الخزينة
             TreasuryTransaction::create([
                 'treasury_id' => $treasury->id,

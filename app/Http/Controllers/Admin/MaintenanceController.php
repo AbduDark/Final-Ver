@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -16,7 +15,7 @@ class MaintenanceController extends Controller
             ->with('technician')
             ->latest()
             ->paginate(20);
-        
+
         return view('admin.maintenance.index', compact('requests'));
     }
 
@@ -26,7 +25,7 @@ class MaintenanceController extends Controller
         $technicians = User::where('store_id', $user->store_id)
             ->where('type', 'admin')
             ->get();
-        
+
         return view('admin.maintenance.create', compact('technicians'));
     }
 
@@ -43,7 +42,7 @@ class MaintenanceController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         MaintenanceRequest::create([
             'ticket_number' => $this->generateTicketNumber(),
             'device_name' => $request->device_name,

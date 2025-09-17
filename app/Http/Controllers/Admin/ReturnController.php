@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -17,7 +16,7 @@ class ReturnController extends Controller
             ->with(['invoice', 'product', 'user'])
             ->latest()
             ->paginate(20);
-        
+
         return view('admin.returns.index', compact('returns'));
     }
 
@@ -36,31 +35,31 @@ class ReturnController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         // البحث عن الفاتورة
         $invoice = Invoice::where('invoice_number', $request->invoice_number)
             ->where('store_id', $user->store_id)
             ->first();
-        
+
         if (!$invoice) {
             return back()->withErrors(['invoice_number' => 'رقم الفاتورة غير صحيح']);
         }
-        
+
         // التحقق من وجود المنتج في الفاتورة
         $invoiceItem = $invoice->items()
             ->where('product_id', $request->product_id)
             ->first();
-        
+
         if (!$invoiceItem || $invoiceItem->quantity < $request->quantity) {
             return back()->withErrors(['quantity' => 'الكمية المطلوبة غير صحيحة']);
         }
 
         DB::transaction(function() use ($request, $user, $invoice, $invoiceItem) {
             $product = Product::findOrFail($request->product_id);
-            
+
             // حساب قيمة الاسترداد
             $refundAmount = $invoiceItem->unit_price * $request->quantity;
-            
+
             // إنشاء المرتجع
             ProductReturn::create([
                 'invoice_id' => $invoice->id,
@@ -71,15 +70,15 @@ class ReturnController extends Controller
                 'store_id' => $user->store_id,
                 'user_id' => $user->id,
             ]);
-            
+
             // إعادة المنتج للمخزون
             $product->increment('quantity', $request->quantity);
-            
+
             // تحديث الخزينة
             $treasury = Treasury::where('store_id', $user->store_id)->first();
             if ($treasury) {
                 $treasury->decrement('current_balance', $refundAmount);
-                
+
                 // تسجيل حركة الخزينة
                 TreasuryTransaction::create([
                     'treasury_id' => $treasury->id,

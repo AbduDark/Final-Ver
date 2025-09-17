@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -16,7 +15,7 @@ class UserController extends Controller
         $users = User::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with('store')->paginate(15);
-        
+
         return view('superadmin.users.index', compact('users'));
     }
 
@@ -24,7 +23,7 @@ class UserController extends Controller
     {
         $superAdmin = auth()->user();
         $stores = Store::where('super_admin_id', $superAdmin->id)->get();
-        
+
         return view('superadmin.users.create', compact('stores'));
     }
 
@@ -54,7 +53,7 @@ class UserController extends Controller
     {
         $superAdmin = auth()->user();
         $stores = Store::where('super_admin_id', $superAdmin->id)->get();
-        
+
         return view('superadmin.users.edit', compact('user', 'stores'));
     }
 
@@ -68,7 +67,7 @@ class UserController extends Controller
         ]);
 
         $data = $request->only(['name', 'email', 'type', 'store_id']);
-        
+
         if ($request->filled('password')) {
             $request->validate(['password' => 'string|min:8|confirmed']);
             $data['password'] = Hash::make($request->password);
@@ -83,7 +82,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        
+
         return redirect()->route('superadmin.users.index')
             ->with('success', 'تم حذف المستخدم بنجاح');
     }

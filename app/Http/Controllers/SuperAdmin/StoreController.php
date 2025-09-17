@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -16,7 +15,7 @@ class StoreController extends Controller
         $stores = Store::where('super_admin_id', $user->id)
             ->withCount(['users', 'products', 'invoices'])
             ->paginate(10);
-        
+
         return view('superadmin.stores.index', compact('stores'));
     }
 
@@ -35,7 +34,7 @@ class StoreController extends Controller
         ]);
 
         $user = auth()->user();
-        
+
         Store::create([
             'name' => $request->name,
             'address' => $request->address,
@@ -52,11 +51,11 @@ class StoreController extends Controller
     public function show(Store $store)
     {
         $this->authorize('view', $store);
-        
+
         $store->load(['users', 'products', 'invoices' => function($query) {
             $query->latest()->limit(10);
         }]);
-        
+
         return view('superadmin.stores.show', compact('store'));
     }
 
@@ -69,7 +68,7 @@ class StoreController extends Controller
     public function update(Request $request, Store $store)
     {
         $this->authorize('update', $store);
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -87,9 +86,9 @@ class StoreController extends Controller
     public function destroy(Store $store)
     {
         $this->authorize('delete', $store);
-        
+
         $store->delete();
-        
+
         return redirect()->route('superadmin.stores.index')
             ->with('success', 'تم حذف المتجر بنجاح');
     }
@@ -97,23 +96,23 @@ class StoreController extends Controller
     public function users(Store $store)
     {
         $this->authorize('view', $store);
-        
+
         $users = $store->users()->paginate(10);
-        
+
         return view('superadmin.stores.users', compact('store', 'users'));
     }
 
     public function createUser(Store $store)
     {
         $this->authorize('view', $store);
-        
+
         return view('superadmin.stores.create-user', compact('store'));
     }
 
     public function storeUser(Request $request, Store $store)
     {
         $this->authorize('view', $store);
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

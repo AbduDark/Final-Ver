@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -13,12 +12,12 @@ class TreasuryController extends Controller
     {
         $user = auth()->user();
         $treasury = Treasury::firstOrCreate(['store_id' => $user->store_id]);
-        
+
         $transactions = TreasuryTransaction::where('treasury_id', $treasury->id)
             ->with('user')
             ->latest()
             ->paginate(20);
-        
+
         return view('admin.treasury.index', compact('treasury', 'transactions'));
     }
 
@@ -32,14 +31,14 @@ class TreasuryController extends Controller
 
         $user = auth()->user();
         $treasury = Treasury::firstOrCreate(['store_id' => $user->store_id]);
-        
+
         // تحديث رصيد الخزينة
         if ($request->type === 'income') {
             $treasury->increment('current_balance', $request->amount);
         } else {
             $treasury->decrement('current_balance', $request->amount);
         }
-        
+
         // تسجيل المعاملة
         TreasuryTransaction::create([
             'treasury_id' => $treasury->id,
@@ -59,14 +58,14 @@ class TreasuryController extends Controller
     {
         $user = auth()->user();
         $treasury = Treasury::where('store_id', $user->store_id)->first();
-        
+
         $todayTransactions = TreasuryTransaction::where('treasury_id', $treasury->id)
             ->whereDate('created_at', today())
             ->get();
-        
+
         $todayIncome = $todayTransactions->where('type', 'income')->sum('amount');
         $todayExpense = $todayTransactions->where('type', 'expense')->sum('amount');
-        
+
         return view('admin.treasury.daily-closing', compact(
             'treasury', 'todayTransactions', 'todayIncome', 'todayExpense'
         ));
