@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Cashier;
@@ -43,7 +42,7 @@ class CashierDashboardController extends Controller
             ->count();
 
         return view('cashier.dashboard', compact(
-            'store', 'todayInvoices', 'todayRevenue', 
+            'store', 'todayInvoices', 'todayRevenue',
             'pendingTransfers', 'recentInvoices', 'lowStockProducts'
         ));
     }
