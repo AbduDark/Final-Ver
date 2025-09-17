@@ -9,6 +9,64 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
+    public function index()
+    {
+        $user = auth()->user();
+        $invoices = Invoice::where('store_id', $user->store_id)
+            ->where('user_id', $user->id)
+            ->with(['user', 'items.product'])
+            ->latest()
+            ->paginate(20);
+
+        return view('cashier.invoices.index', compact('invoices'));
+    }
+
+    public function show(Invoice $invoice)
+    {
+        $user = auth()->user();
+        
+        // التأكد من أن الفاتورة تخص نفس المتجر والكاشير
+        if ($invoice->store_id !== $user->store_id || $invoice->user_id !== $user->id) {
+            abort(403, 'غير مسموح بالوصول إلى هذه الفاتورة');
+        }
+
+        $invoice->load(['items.product', 'user']);
+
+        return view('cashier.invoices.show', compact('invoice'));
+    }
+
+    public function print(Invoice $invoice)
+    {
+        $user = auth()->user();
+        
+        // التأكد من أن الفاتورة تخص نفس المتجر والكاشير
+        if ($invoice->store_id !== $user->store_id || $invoice->user_id !== $user->id) {
+            abort(403, 'غير مسموح بالوصول إلى هذه الفاتورة');
+        }
+
+        $invoice->load(['items.product', 'user', 'store']);
+
+        return view('cashier.invoices.print', compact('invoice'));
+    }
+
+    public function search(Request $request)
+    {
+        $user = auth()->user();
+        $search = $request->get('q');
+        
+        $invoices = Invoice::where('store_id', $user->store_id)
+            ->where('user_id', $user->id)
+            ->where(function($query) use ($search) {
+                $query->where('invoice_number', 'like', "%{$search}%")
+                      ->orWhere('customer_name', 'like', "%{$search}%")
+                      ->orWhere('customer_phone', 'like', "%{$search}%");
+            })
+            ->with(['user', 'items.product'])
+            ->latest()
+            ->paginate(20);
+
+        return view('cashier.invoices.index', compact('invoices'));
+    }
     public function create()
     {
         $user = auth()->user();
