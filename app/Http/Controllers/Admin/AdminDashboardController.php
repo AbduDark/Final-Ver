@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Product, Invoice, MaintenanceRequest, Transfer, Treasury};
-use Carbon\Carbon;
+use App\Models\{Store, Product, Invoice, Category, ProductReturn, MaintenanceRequest};
+use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
@@ -13,51 +13,48 @@ class AdminDashboardController extends Controller
         $user = auth()->user();
         $store = $user->store;
 
-        // إحصائيات سريعة
+        if (!$store) {
+            return redirect()->route('login')->with('error', 'لا يوجد متجر مُحدد لهذا المستخدم');
+        }
+
+        // إحصائيات المتجر
         $totalProducts = Product::where('store_id', $store->id)->count();
-
-        $todayRevenue = Invoice::where('store_id', $store->id)
-            ->whereDate('created_at', Carbon::today())
-            ->sum('net_amount');
-
-        $monthlyRevenue = Invoice::where('store_id', $store->id)
-            ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()])
-            ->sum('net_amount');
-
-        $pendingMaintenance = MaintenanceRequest::where('store_id', $store->id)
-            ->where('status', 'pending')
-            ->count();
-
         $lowStockProducts = Product::where('store_id', $store->id)
-            ->whereColumn('quantity', '<=', 'min_quantity')
-            ->count();
-
+            ->where('stock', '<=', 'min_stock')->count();
+        $totalCategories = Category::where('store_id', $store->id)->count();
         $todayInvoices = Invoice::where('store_id', $store->id)
-            ->whereDate('created_at', Carbon::today())
-            ->count();
+            ->whereDate('created_at', today())->count();
+        $todaySales = Invoice::where('store_id', $store->id)
+            ->whereDate('created_at', today())->sum('total');
+        $totalReturns = ProductReturn::where('store_id', $store->id)->count();
+        $pendingMaintenance = MaintenanceRequest::where('store_id', $store->id)
+            ->where('status', 'pending')->count();
 
-        // آخر الفواتير
+        // أحدث الفواتير
         $recentInvoices = Invoice::where('store_id', $store->id)
-            ->with(['user', 'items.product'])
+            ->with('user')
             ->latest()
-            ->limit(10)
+            ->take(5)
             ->get();
 
-        // رسم بياني للمبيعات الأسبوعية
-        $weeklyChart = Invoice::where('store_id', $store->id)
-            ->whereBetween('created_at', [Carbon::now()->subDays(6), Carbon::now()])
-            ->selectRaw('DATE(created_at) as date, SUM(net_amount) as total')
-            ->groupBy('date')
-            ->orderBy('date')
+        // المنتجات قليلة المخزون
+        $lowStockProductsList = Product::where('store_id', $store->id)
+            ->where('stock', '<=', 'min_stock')
+            ->with('category')
+            ->take(10)
             ->get();
-
-        // حالة الخزينة
-        $treasury = Treasury::where('store_id', $store->id)->first();
-        $currentBalance = $treasury ? $treasury->current_balance : 0;
 
         return view('admin.dashboard', compact(
-            'totalProducts', 'todayRevenue', 'monthlyRevenue', 'pendingMaintenance',
-            'lowStockProducts', 'todayInvoices', 'recentInvoices', 'weeklyChart', 'currentBalance'
+            'store',
+            'totalProducts',
+            'lowStockProducts', 
+            'totalCategories',
+            'todayInvoices',
+            'todaySales',
+            'totalReturns',
+            'pendingMaintenance',
+            'recentInvoices',
+            'lowStockProductsList'
         ));
     }
 }
