@@ -15,11 +15,11 @@ class RoleMiddleware
         }
 
         $user = auth()->user();
-        
+
         if (!in_array($user->type, $roles)) {
             abort(403, 'غير مصرح لك بالوصول لهذه الصفحة');
         }
 
-        return $next($request);n $next($request);
+        return  $next($request);
     }
 }
