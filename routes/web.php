@@ -54,6 +54,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('products', ProductController::class, ['as' => 'admin']);
     Route::get('/products/low-stock', [ProductController::class, 'lowStock'])->name('admin.products.low-stock');
     Route::post('/products/create-category', [ProductController::class, 'createCategory'])->name('admin.products.create-category');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+
 
     // إدارة الفواتير - الأدمن له نفس صلاحيات الكاشير وأكثر
     Route::get('/invoices', [\App\Http\Controllers\Cashier\InvoiceController::class, 'index'])->name('admin.invoices.index');
@@ -63,6 +65,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/invoices/{invoice}/print', [\App\Http\Controllers\Cashier\InvoiceController::class, 'print'])->name('admin.invoices.print');
     Route::get('/invoices/search', [\App\Http\Controllers\Cashier\InvoiceController::class, 'search'])->name('admin.invoices.search');
     Route::get('/products/search', [\App\Http\Controllers\Cashier\InvoiceController::class, 'searchProducts'])->name('admin.products.search');
+    Route::get('/invoices/items/{invoice_number}', [\App\Http\Controllers\Admin\ReturnController::class, 'getInvoiceItems'])->name('admin.invoices.items');
+
 
     // المرتجعات
     Route::resource('returns', ReturnController::class, ['as' => 'admin']);
@@ -70,9 +74,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     // الصيانة
     Route::resource('maintenance', MaintenanceController::class, ['as' => 'admin']);
     Route::patch('/maintenance/{maintenance}/status', [MaintenanceController::class, 'updateStatus'])->name('admin.maintenance.status');
+    Route::get('/maintenance/{maintenance}/edit', [MaintenanceController::class, 'edit'])->name('admin.maintenance.edit');
+    Route::delete('/maintenance/{maintenance}', [MaintenanceController::class, 'destroy'])->name('admin.maintenance.destroy');
+
 
     // التحويلات
     Route::resource('transfers', TransferController::class, ['as' => 'admin']);
+    Route::get('/transfers/create', [TransferController::class, 'create'])->name('admin.transfers.create');
+
 
     // الباقات
     Route::resource('packages', PackageController::class, ['as' => 'admin']);

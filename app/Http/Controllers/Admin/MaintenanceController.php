@@ -65,6 +65,16 @@ class MaintenanceController extends Controller
         return view('admin.maintenance.show', compact('maintenance'));
     }
 
+    public function edit(MaintenanceRequest $maintenance)
+    {
+        $user = auth()->user();
+        $technicians = User::where('store_id', $user->store_id)
+            ->where('type', 'admin')
+            ->get();
+
+        return view('admin.maintenance.edit', compact('maintenance', 'technicians'));
+    }
+
     public function update(Request $request, MaintenanceRequest $maintenance)
     {
         $request->validate([

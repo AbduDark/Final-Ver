@@ -95,4 +95,35 @@ class ReturnController extends Controller
         return redirect()->route('admin.returns.index')
             ->with('success', 'تم تسجيل المرتجع بنجاح');
     }
+
+    public function getInvoiceItems($invoiceNumber)
+    {
+        $user = auth()->user();
+        
+        $invoice = Invoice::where('invoice_number', $invoiceNumber)
+            ->where('store_id', $user->store_id)
+            ->with('items.product')
+            ->first();
+
+        if (!$invoice) {
+            return response()->json([
+                'success' => false,
+                'message' => 'فاتورة غير موجودة'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'items' => $invoice->items->map(function($item) {
+                return [
+                    'product' => [
+                        'id' => $item->product->id,
+                        'name' => $item->product->name
+                    ],
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price
+                ];
+            })
+        ]);
+    }
 }

@@ -71,7 +71,7 @@ class ProductController extends Controller
             'store_id' => $user->store_id,
         ]);
 
-        return redirect()->route('products.index')
+        return redirect()->route('admin.products.index')
             ->with('success', 'تم إضافة المنتج بنجاح');
     }
 

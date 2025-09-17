@@ -35,7 +35,7 @@ class CategoryController extends Controller
             'store_id' => $user->store_id,
         ]);
 
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'تم إضافة الفئة بنجاح');
     }
 
@@ -56,14 +56,14 @@ class CategoryController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'تم تحديث الفئة بنجاح');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'تم حذف الفئة بنجاح');
     }
 }
