@@ -123,7 +123,7 @@
                                 {{ $transaction->type === 'income' ? 'إيرادات' : 'مصروفات' }}
                             </span>
                         </td>
-                        <td>{{ number_format($transaction->amount, 2) }} ريال</td>
+                        <td>{{ number_format($transaction->amount, 2) }} ج.م</td>
                         <td>{{ $transaction->description }}</td>
                         <td>{{ $transaction->user->name }}</td>
                         <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>

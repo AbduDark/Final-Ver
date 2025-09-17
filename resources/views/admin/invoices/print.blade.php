@@ -29,6 +29,50 @@
             <h2>{{ $invoice->store->name ?? 'اسم المتجر' }}</h2>
             <p>{{ $invoice->store->address ?? 'عنوان المتجر' }}</p>
             <p>هاتف: {{ $invoice->store->phone ?? 'رقم الهاتف' }}</p>
+            <hr>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="invoice-info">
+                    <strong>رقم الفاتورة:</strong> {{ $invoice->invoice_number }}<br>
+                    <strong>التاريخ:</strong> {{ $invoice->created_at->format('Y-m-d H:i') }}<br>
+                    <strong>الكاشير:</strong> {{ $invoice->user->name }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>الكمية</th>
+                        <th>السعر</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($invoice->items as $item)
+                    <tr>
+                        <td>{{ $item->product->name }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>{{ number_format($item->unit_price, 2) }} ج.م</td>
+                        <td>{{ number_format($item->total_price, 2) }} ج.م</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">الإجمالي:</th>
+                        <th>{{ number_format($invoice->net_amount, 2) }} ج.م</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="text-center mt-4">
+            <p>شكراً لتعاملكم معنا</p>
         </div>
         
         <div class="row">

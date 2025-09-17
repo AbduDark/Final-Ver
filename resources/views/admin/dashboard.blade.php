@@ -112,7 +112,7 @@
         <div class="card stats-card bg-info text-white">
             <div class="card-body text-center">
                 <i class="fas fa-dollar-sign fa-2x mb-3"></i>
-                <h4>{{ number_format($todaySales ?? 0, 2) }}</h4>
+                <h4>{{ number_format($todaySales ?? 0, 2) }} ج.م</h4>
                 <p class="mb-0">مبيعات اليوم</p>
             </div>
         </div>
