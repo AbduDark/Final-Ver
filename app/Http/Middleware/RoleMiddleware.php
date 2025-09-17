@@ -20,6 +20,6 @@ class RoleMiddleware
             abort(403, 'غير مصرح لك بالوصول لهذه الصفحة');
         }
 
-        return $next($request);
+        return $next($request);n $next($request);
     }
 }

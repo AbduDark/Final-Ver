@@ -29,15 +29,6 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             $user = Auth::user();
-            
-            // إزالة أي sessions قديمة
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            
-            // تسجيل دخول جديد
-            Auth::login($user);
-            $request->session()->regenerate();
-            
             return $this->redirectToDashboard($user);
         }
 

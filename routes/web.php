@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
@@ -8,9 +7,14 @@ use App\Http\Controllers\Admin\{ProductController, CategoryController, ReportCon
 use Illuminate\Support\Facades\Route;
 
 // Routes المصادقة
-Route::get('/', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('guest')->group(function () {
+    Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
 // Routes السوبر أدمن
 Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(function () {
