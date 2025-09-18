@@ -60,7 +60,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title">إجمالي المتاجر</h6>
-                        <h3 class="mb-0">{{ $totalStores }}</h3>
+                        <h3 class="mb-0 counter">{{ $totalStores }}</h3>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-store fa-2x"></i>
@@ -75,7 +75,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title">إجمالي المستخدمين</h6>
-                        <h3 class="mb-0">{{ $totalUsers }}</h3>
+                        <h3 class="mb-0 counter">{{ $totalUsers }}</h3>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-users fa-2x"></i>
@@ -243,30 +243,105 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-// رسم بياني للمبيعات
-const ctx = document.getElementById('salesChart').getContext('2d');
-const salesChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: {!! json_encode($weeklyChart->pluck('date')) !!},
-        datasets: [{
-            label: 'المبيعات (ر.س)',
-            data: {!! json_encode($weeklyChart->pluck('total')) !!},
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.1
-        }]
+// رسم بياني متقدم للمبيعات
+const salesData = {!! json_encode($weeklyChart->pluck('total')) !!};
+const salesLabels = {!! json_encode($weeklyChart->pluck('date')) !!};
+
+const options = {
+    series: [{
+        name: 'المبيعات',
+        data: salesData
+    }],
+    chart: {
+        type: 'area',
+        height: 350,
+        toolbar: {
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true
+            }
+        },
+        animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800
+        }
     },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'smooth',
+        width: 3
+    },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.2,
+            stops: [0, 90, 100]
+        }
+    },
+    colors: ['#667eea'],
+    xaxis: {
+        categories: salesLabels,
+        labels: {
+            style: {
+                fontFamily: 'Cairo'
             }
         }
+    },
+    yaxis: {
+        labels: {
+            formatter: function (val) {
+                return val.toLocaleString('ar-EG') + ' ج.م';
+            },
+            style: {
+                fontFamily: 'Cairo'
+            }
+        }
+    },
+    tooltip: {
+        theme: 'dark',
+        y: {
+            formatter: function (val) {
+                return val.toLocaleString('ar-EG') + ' ج.م';
+            }
+        }
+    },
+    grid: {
+        borderColor: '#e7e7e7',
+        strokeDashArray: 5
     }
-});
+};
+
+const chart = new ApexCharts(document.querySelector("#salesChart"), options);
+chart.render();
+
+// تحديث الرسم البياني بناءً على الثيم
+function updateChartTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    chart.updateOptions({
+        theme: {
+            mode: isDark ? 'dark' : 'light'
+        },
+        grid: {
+            borderColor: isDark ? '#4a5568' : '#e7e7e7'
+        }
+    });
+}
+
+// مراقبة تغيير الثيم
+const observer = new MutationObserver(updateChartTheme);
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 </script>
 @endpush
