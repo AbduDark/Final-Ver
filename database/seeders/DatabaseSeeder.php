@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         $cashier = User::create([
             'name' => 'فاطمة أحمد',
             'email' => 'cashier@riyadh.com',
-            'password' => Hash::make('AlHusseini@2025'),
+            'password' => Hash::make(''),
             'type' => 'cashier',
             'store_id' => $store->id,
             'email_verified_at' => now(),
