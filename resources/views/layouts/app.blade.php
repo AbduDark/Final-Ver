@@ -44,6 +44,57 @@
             --border-color: #4a5568;
         }
 
+        [data-theme="dark"] body {
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+        }
+
+        [data-theme="dark"] .stats-card,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .main-content {
+            background-color: #2d3748;
+            border-color: #4a5568;
+            color: #f7fafc;
+        }
+
+        [data-theme="dark"] .table th {
+            background: linear-gradient(90deg, #4a5568, #2d3748);
+            color: #f7fafc;
+        }
+
+        [data-theme="dark"] .table td {
+            background-color: #2d3748;
+            color: #f7fafc;
+            border-color: #4a5568;
+        }
+
+        [data-theme="dark"] .form-control,
+        [data-theme="dark"] .form-select {
+            background-color: #4a5568;
+            border-color: #718096;
+            color: #f7fafc;
+        }
+
+        [data-theme="dark"] .form-control:focus,
+        [data-theme="dark"] .form-select:focus {
+            background-color: #4a5568;
+            border-color: var(--primary-color);
+            color: #f7fafc;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        [data-theme="dark"] .text-muted {
+            color: #a0aec0 !important;
+        }
+
+        [data-theme="dark"] .text-dark {
+            color: #f7fafc !important;
+        }
+
         * {
             transition: all 0.3s ease;
         }
@@ -52,6 +103,20 @@
             font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-dark);
+            direction: rtl;
+        }
+
+        * {
+            font-family: 'Cairo', sans-serif !important;
+        }
+
+        .table, .table th, .table td,
+        .form-control, .form-select, .form-label,
+        .btn, .badge, .alert,
+        .card, .card-title, .card-text,
+        h1, h2, h3, h4, h5, h6,
+        p, span, div, a {
+            font-family: 'Cairo', sans-serif !important;
         }
         
         .sidebar {
@@ -357,34 +422,59 @@
         // Theme Toggle
         function toggleTheme() {
             const html = document.documentElement;
+            const body = document.body;
             const icon = document.getElementById('theme-icon');
             
             if (html.getAttribute('data-theme') === 'dark') {
                 html.removeAttribute('data-theme');
+                body.classList.remove('dark-theme');
                 icon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             } else {
                 html.setAttribute('data-theme', 'dark');
+                body.classList.add('dark-theme');
                 icon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
             }
+            
+            // إعادة تطبيق الخطوط العربية
+            applyArabicFonts();
+        }
+
+        // تطبيق الخطوط العربية
+        function applyArabicFonts() {
+            const elements = document.querySelectorAll('*');
+            elements.forEach(element => {
+                if (element.style) {
+                    element.style.fontFamily = "'Cairo', sans-serif";
+                }
+            });
         }
 
         // Load saved theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme');
             const icon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+            const body = document.body;
             
             if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
+                html.setAttribute('data-theme', 'dark');
+                body.classList.add('dark-theme');
                 icon.className = 'fas fa-sun';
             }
+
+            // تطبيق الخطوط العربية
+            applyArabicFonts();
 
             // Counter Animation
             animateCounters();
 
             // Sidebar Toggle for Mobile
             setupMobileSidebar();
+            
+            // مراقبة التغييرات في DOM للحفاظ على الخطوط العربية
+            observeDOM();
         });
 
         // Counter Animation
@@ -480,6 +570,26 @@
                         }
                     });
                 });
+            });
+        }
+
+        // مراقبة التغييرات في DOM
+        function observeDOM() {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                                applyArabicFonts();
+                            }
+                        });
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
             });
         }
 
