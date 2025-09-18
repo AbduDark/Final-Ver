@@ -25,6 +25,24 @@
         </a>
     </li>
     <li class="nav-item">
+        <a href="{{ route('superadmin.treasury.index') }}" class="nav-link">
+            <i class="fas fa-coins me-2"></i>
+            إدارة الخزائن
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('superadmin.maintenance.index') }}" class="nav-link">
+            <i class="fas fa-tools me-2"></i>
+            طلبات الصيانة
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('superadmin.packages.index') }}" class="nav-link">
+            <i class="fas fa-cube me-2"></i>
+            إدارة الباقات
+        </a>
+    </li>
+    <li class="nav-item">
         <a href="{{ route('superadmin.reports.index') }}" class="nav-link">
             <i class="fas fa-chart-bar me-2"></i>
             التقارير والإحصائيات
