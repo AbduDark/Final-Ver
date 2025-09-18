@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -12,7 +11,7 @@ class TreasuryController extends Controller
     public function index()
     {
         $superAdmin = auth()->user();
-        
+
         $treasuries = Treasury::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with('store')->get();
@@ -25,7 +24,7 @@ class TreasuryController extends Controller
     public function activities()
     {
         $superAdmin = auth()->user();
-        
+
         $transactions = TreasuryTransaction::whereHas('treasury.store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with(['treasury.store', 'user'])->latest()->paginate(50);

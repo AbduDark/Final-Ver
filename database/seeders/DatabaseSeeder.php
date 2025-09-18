@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $superAdmin = User::create([
             'name' => 'مدير النظام',
             'email' => 'admin@alhusseini.com',
-            'password' => Hash::make('AlHusseini@2025'),
+            'password' => Hash::make('1'),
             'type' => 'super_admin',
             'store_id' => null,
             'email_verified_at' => now(),
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         $storeAdmin = User::create([
             'name' => 'أحمد محمد',
             'email' => 'admin@riyadh.com',
-            'password' => Hash::make('AlHusseini@2025'),
+            'password' => Hash::make('1'),
             'type' => 'admin',
             'store_id' => $store->id,
             'email_verified_at' => now(),
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         $cashier = User::create([
             'name' => 'فاطمة أحمد',
             'email' => 'cashier@riyadh.com',
-            'password' => Hash::make(''),
+            'password' => Hash::make('1'),
             'type' => 'cashier',
             'store_id' => $store->id,
             'email_verified_at' => now(),

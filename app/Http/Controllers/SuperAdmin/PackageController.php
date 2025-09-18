@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -12,7 +11,7 @@ class PackageController extends Controller
     public function index()
     {
         $superAdmin = auth()->user();
-        
+
         $packages = Package::whereHas('store', function($query) use ($superAdmin) {
             $query->where('super_admin_id', $superAdmin->id);
         })->with('store')->latest()->paginate(20);
