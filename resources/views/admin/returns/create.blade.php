@@ -72,7 +72,7 @@
 
                     <div class="mb-3">
                         <label for="expected_refund" class="form-label">المبلغ المتوقع إرجاعه</label>
-                        <span id="expected-refund" class="form-control-plaintext">0.00 ريال</span>
+                        <span id="expected-refund" class="form-control-plaintext">0.00 ج.م</span>
                     </div>
 
                     <div class="d-flex justify-content-between">
@@ -166,9 +166,9 @@ function updateExpectedRefund() {
         const quantity = parseInt(quantityInput.value);
         const refund = unitPrice * quantity;
 
-        refundDiv.textContent = `${refund.toFixed(2)} ريال`;
+        refundDiv.textContent = `${refund.toFixed(2)} ج.م`;
     } else {
-        refundDiv.textContent = '0.00 ريال';
+        refundDiv.textContent = '0.00 ج.م';
     }
 }
 </script>

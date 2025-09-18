@@ -29,7 +29,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6>الرصيد الحالي</h6>
-                        <h3>{{ number_format($treasury->current_balance, 2) }} ريال</h3>
+                        <h3>{{ number_format($treasury->current_balance, 2) }} ج.م</h3>
                     </div>
                     <div>
                         <i class="fas fa-wallet fa-2x"></i>
@@ -45,7 +45,7 @@
                     <div>
                         <h6>آخر معاملة</h6>
                         <p>{{ $treasury->last_transaction_type === 'income' ? 'إيرادات' : 'مصروفات' }}</p>
-                        <p>{{ number_format($treasury->last_transaction_amount, 2) }} ريال</p>
+                        <p>{{ number_format($treasury->last_transaction_amount, 2) }} ج.م</p>
                     </div>
                     <div>
                         <i class="fas fa-exchange-alt fa-2x"></i>

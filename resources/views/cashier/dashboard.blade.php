@@ -56,7 +56,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-title">مبيعات اليوم</h6>
-                        <h3 class="mb-0">{{ number_format($todayRevenue, 2) }} ر.س</h3>
+                        <h3 class="mb-0">{{ number_format($todayRevenue, 2) }} ج.م</h3>
                     </div>
                     <div class="align-self-center">
                         <i class="fas fa-dollar-sign fa-2x"></i>
@@ -140,7 +140,7 @@
                                     <tr>
                                         <td><strong>{{ $invoice->invoice_number }}</strong></td>
                                         <td>{{ $invoice->customer_name ?: 'غير محدد' }}</td>
-                                        <td>{{ number_format($invoice->net_amount, 2) }} ر.س</td>
+                                        <td>{{ number_format($invoice->net_amount, 2) }} ج.م</td>
                                         <td>{{ $invoice->created_at->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <button class="btn btn-sm btn-success" onclick="printInvoice({{ $invoice->id }})">
@@ -210,7 +210,7 @@ $('#productSearch').on('keyup', function() {
                 html += `
                     <div class="border p-2 mb-2 rounded">
                         <strong>${product.name}</strong> - ${product.code}<br>
-                        <small>الفئة: ${product.category.name} | الكمية: ${product.quantity} | السعر: ${product.sale_price} ر.س</small>
+                        <small>الفئة: ${product.category.name} | الكمية: ${product.quantity} | السعر: ${product.sale_price} ج.م</small>
                     </div>
                 `;
             });

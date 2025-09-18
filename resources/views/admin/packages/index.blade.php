@@ -55,11 +55,11 @@
                     <tr>
                         <td>{{ $package->name }}</td>
                         <td>{{ $package->network }}</td>
-                        <td>{{ number_format($package->purchase_price, 2) }} ريال</td>
-                        <td>{{ number_format($package->sale_price, 2) }} ريال</td>
+                        <td>{{ number_format($package->purchase_price, 2) }} ج.م</td>
+                        <td>{{ number_format($package->sale_price, 2) }} ج.م</td>
                         <td>
                             <span class="badge bg-success">
-                                {{ number_format($package->sale_price - $package->purchase_price, 2) }} ريال
+                                {{ number_format($package->sale_price - $package->purchase_price, 2) }} ج.م
                             </span>
                         </td>
                         <td>

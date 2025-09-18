@@ -79,7 +79,7 @@
                                 @endswitch
                             </span>
                         </td>
-                        <td>{{ number_format($transfer->amount, 2) }} ريال</td>
+                        <td>{{ number_format($transfer->amount, 2) }} ج.م</td>
                         <td>{{ $transfer->customer_name }}</td>
                         <td>{{ $transfer->customer_phone }}</td>
                         <td>
