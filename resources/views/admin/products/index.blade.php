@@ -47,6 +47,49 @@
     </div>
 @endif
 
+<!-- فيلتر البحث المتقدم -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ route('admin.products.index') }}">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="ابحث بالاسم أو الكود" value="{{ request('search') }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="category" class="form-select">
+                        <option value="">كل الفئات</option>
+                        @foreach($categories ?? [] as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="stock_status" class="form-select">
+                        <option value="">كل المخزون</option>
+                        <option value="low" {{ request('stock_status') == 'low' ? 'selected' : '' }}>مخزون منخفض</option>
+                        <option value="out" {{ request('stock_status') == 'out' ? 'selected' : '' }}>نفد المخزون</option>
+                        <option value="available" {{ request('stock_status') == 'available' ? 'selected' : '' }}>متوفر</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="min_price" class="form-control" 
+                           placeholder="أقل سعر" value="{{ request('min_price') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="max_price" class="form-control" 
+                           placeholder="أعلى سعر" value="{{ request('max_price') }}">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary">بحث</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
