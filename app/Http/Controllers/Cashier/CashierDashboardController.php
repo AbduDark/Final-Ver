@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Cashier;
 use App\Http\Controllers\Controller;
 use App\Models\{Product, Invoice, Transfer};
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+USE App\Models\Notification;
 
 class CashierDashboardController extends Controller
 {
