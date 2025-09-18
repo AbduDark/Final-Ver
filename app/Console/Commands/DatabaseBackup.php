@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Console\Commands;
@@ -16,7 +15,7 @@ class DatabaseBackup extends Command
     {
         $filename = 'backup-' . Carbon::now()->format('Y-m-d_H-i-s') . '.sql';
         $compress = $this->option('compress');
-        
+
         if ($compress) {
             $filename .= '.gz';
         }
@@ -48,7 +47,7 @@ class DatabaseBackup extends Command
 
         if ($result === 0) {
             $this->info('تم إنشاء النسخة الاحتياطية بنجاح: ' . $filename);
-            
+
             // حذف النسخ الاحتياطية القديمة (أكثر من 30 يوم)
             $this->cleanOldBackups();
         } else {

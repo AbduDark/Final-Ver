@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -50,7 +49,7 @@ class FinancialReportController extends Controller
         $netProfit = $grossProfit - $totalExpenses;
 
         return view('admin.reports.profit-loss', compact(
-            'totalSales', 'costOfGoodsSold', 'totalExpenses', 
+            'totalSales', 'costOfGoodsSold', 'totalExpenses',
             'grossProfit', 'netProfit', 'startDate', 'endDate'
         ));
     }

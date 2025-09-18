@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -13,7 +12,7 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $superAdmin = auth()->user();
-        
+
         $notifications = Notification::whereHas('store', function($query) use ($superAdmin) {
                 $query->where('super_admin_id', $superAdmin->id);
             })
@@ -39,7 +38,7 @@ class NotificationController extends Controller
     public function getUnread(Request $request)
     {
         $superAdmin = auth()->user();
-        
+
         $notifications = Notification::whereHas('store', function($query) use ($superAdmin) {
                 $query->where('super_admin_id', $superAdmin->id);
             })

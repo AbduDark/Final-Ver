@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\SuperAdmin;
@@ -60,7 +59,7 @@ class FinancialReportController extends Controller
             ->map(function($store) use ($startDate, $endDate) {
                 $revenue = $store->invoices->sum('net_amount');
                 $cost = 0;
-                
+
                 foreach ($store->invoices as $invoice) {
                     foreach ($invoice->items as $item) {
                         if ($item->product) {
@@ -89,7 +88,7 @@ class FinancialReportController extends Controller
             });
 
         return view('superadmin.reports.profit-loss', compact(
-            'totalRevenue', 'totalCost', 'totalExpenses', 'grossProfit', 
+            'totalRevenue', 'totalCost', 'totalExpenses', 'grossProfit',
             'netProfit', 'profitMargin', 'storesProfits', 'startDate', 'endDate'
         ));
     }
@@ -123,7 +122,7 @@ class FinancialReportController extends Controller
         $netCashFlow = $totalInflows - $totalOutflows;
 
         return view('superadmin.reports.cash-flow', compact(
-            'cashInflows', 'cashOutflows', 'totalInflows', 
+            'cashInflows', 'cashOutflows', 'totalInflows',
             'totalOutflows', 'netCashFlow', 'startDate', 'endDate'
         ));
     }
@@ -132,7 +131,7 @@ class FinancialReportController extends Controller
     {
         $superAdmin = auth()->user();
         $period = $request->period ?? 'month';
-        
+
         switch ($period) {
             case 'week':
                 $startDate = Carbon::now()->startOfWeek();
@@ -182,7 +181,7 @@ class FinancialReportController extends Controller
             ->get();
 
         return view('superadmin.reports.financial-summary', compact(
-            'revenue', 'expenses', 'dailyRevenue', 'topStores', 
+            'revenue', 'expenses', 'dailyRevenue', 'topStores',
             'period', 'startDate', 'endDate'
         ));
     }
