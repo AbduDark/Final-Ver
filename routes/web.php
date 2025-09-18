@@ -31,6 +31,16 @@ Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(fun
     // إدارة المستخدمين
     Route::resource('users', UserController::class, ['as' => 'superadmin']);
 
+    // إدارة الخزينة للسوبر أدمن
+    Route::get('/treasury', [App\Http\Controllers\SuperAdmin\TreasuryController::class, 'index'])->name('superadmin.treasury.index');
+    Route::get('/treasury/activities', [App\Http\Controllers\SuperAdmin\TreasuryController::class, 'activities'])->name('superadmin.treasury.activities');
+
+    // إدارة الصيانة للسوبر أدمن
+    Route::get('/maintenance', [App\Http\Controllers\SuperAdmin\MaintenanceController::class, 'index'])->name('superadmin.maintenance.index');
+
+    // إدارة الباقات للسوبر أدمن
+    Route::get('/packages', [App\Http\Controllers\SuperAdmin\PackageController::class, 'index'])->name('superadmin.packages.index');
+
     // التقارير
     Route::prefix('reports')->group(function () {
         // تقارير السوبر أدمن
@@ -41,6 +51,7 @@ Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(fun
         Route::get('/reports/monthly', [App\Http\Controllers\SuperAdmin\ReportController::class, 'monthly'])->name('superadmin.reports.monthly');
         Route::get('/reports/inventory', [App\Http\Controllers\SuperAdmin\ReportController::class, 'inventory'])->name('superadmin.reports.inventory');
         Route::get('/reports/activities', [App\Http\Controllers\SuperAdmin\ReportController::class, 'activities'])->name('superadmin.reports.activities');
+        Route::get('/reports/maintenance', [App\Http\Controllers\SuperAdmin\ReportController::class, 'maintenanceReport'])->name('superadmin.reports.maintenance');
     });
 });
 
@@ -119,6 +130,11 @@ Route::prefix('cashier')->middleware(['auth', 'role:cashier'])->group(function (
 
     // البحث في الفواتير
     Route::get('/invoices/search', [InvoiceController::class, 'search'])->name('cashier.invoices.search');
+
+    // إدارة الصيانة للكاشير (إنشاء فقط)
+    Route::get('/maintenance', [App\Http\Controllers\Cashier\MaintenanceController::class, 'index'])->name('cashier.maintenance.index');
+    Route::get('/maintenance/create', [App\Http\Controllers\Cashier\MaintenanceController::class, 'create'])->name('cashier.maintenance.create');
+    Route::post('/maintenance', [App\Http\Controllers\Cashier\MaintenanceController::class, 'store'])->name('cashier.maintenance.store');
 });
 
 // Middleware aliases already registered in Kernel.php

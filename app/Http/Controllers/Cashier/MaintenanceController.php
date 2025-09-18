@@ -1,6 +1,7 @@
+
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\{MaintenanceRequest, User};
@@ -16,7 +17,7 @@ class MaintenanceController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('admin.maintenance.index', compact('requests'));
+        return view('cashier.maintenance.index', compact('requests'));
     }
 
     public function create()
@@ -26,7 +27,7 @@ class MaintenanceController extends Controller
             ->where('type', 'admin')
             ->get();
 
-        return view('admin.maintenance.create', compact('technicians'));
+        return view('cashier.maintenance.create', compact('technicians'));
     }
 
     public function store(Request $request)
@@ -56,45 +57,8 @@ class MaintenanceController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('admin.maintenance.index')
+        return redirect()->route('cashier.maintenance.index')
             ->with('success', 'تم إنشاء طلب الصيانة بنجاح');
-    }
-
-    public function show(MaintenanceRequest $maintenance)
-    {
-        return view('admin.maintenance.show', compact('maintenance'));
-    }
-
-    public function edit(MaintenanceRequest $maintenance)
-    {
-        $user = auth()->user();
-        $technicians = User::where('store_id', $user->store_id)
-            ->where('type', 'admin')
-            ->get();
-
-        return view('admin.maintenance.edit', compact('maintenance', 'technicians'));
-    }
-
-    public function update(Request $request, MaintenanceRequest $maintenance)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,in_progress,completed,cancelled',
-            'cost' => 'nullable|numeric|min:0',
-            'technician_id' => 'nullable|exists:users,id',
-        ]);
-
-        $maintenance->update($request->only(['status', 'cost', 'technician_id']));
-
-        return redirect()->route('admin.maintenance.index')
-            ->with('success', 'تم تحديث طلب الصيانة بنجاح');
-    }
-
-    public function destroy(MaintenanceRequest $maintenance)
-    {
-        $maintenance->delete();
-
-        return redirect()->route('admin.maintenance.index')
-            ->with('success', 'تم حذف طلب الصيانة بنجاح');
     }
 
     private function generateTicketNumber()
