@@ -17,6 +17,18 @@
             فاتورة جديدة
         </a>
     </li>
+    <li class="nav-item">
+        <a href="{{ route('cashier.invoices.index') }}" class="nav-link">
+            <i class="fas fa-file-invoice me-2"></i>
+            الفواتير
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('cashier.maintenance.index') }}" class="nav-link">
+            <i class="fas fa-tools me-2"></i>
+            طلبات الصيانة
+        </a>
+    </li>
 </ul>
 @endsection
 

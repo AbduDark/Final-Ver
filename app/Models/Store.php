@@ -19,33 +19,14 @@ class Store extends Model
     ];
 
     // Relationships
-    public function superAdmin()
-    {
-        return $this->belongsTo(User::class, 'super_admin_id');
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-
-    public function categories()
-    {
-        return $this->hasMany(Category::class);
-    }
-
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class);
-    }
-
-    public function treasury()
-    {
-        return $this->hasOne(Treasury::class);
-    }
+    public function superAdmin() { return $this->belongsTo(User::class, 'super_admin_id'); }
+    public function users() { return $this->hasMany(User::class); }
+    public function products() { return $this->hasMany(Product::class); }
+    public function categories() { return $this->hasMany(Category::class); }
+    public function invoices() { return $this->hasMany(Invoice::class); }
+    public function returns() { return $this->hasMany(ProductReturn::class); }
+    public function transfers() { return $this->hasMany(Transfer::class); }
+    public function packages() { return $this->hasMany(Package::class); }
+    public function treasury() { return $this->hasOne(Treasury::class); }
+    public function maintenanceRequests() { return $this->hasMany(MaintenanceRequest::class); }
 }

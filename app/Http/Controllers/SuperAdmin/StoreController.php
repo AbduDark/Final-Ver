@@ -53,10 +53,40 @@ class StoreController extends Controller
         $this->authorize('view', $store);
 
         $store->load(['users', 'products', 'invoices' => function($query) {
-            $query->latest()->limit(10);
+            $query->with('user')->latest()->limit(10);
         }]);
 
-        return view('superadmin.stores.show', compact('store'));
+        // بيانات الخزينة
+        $treasury = $store->treasury;
+        $treasuryBalance = $treasury ? $treasury->current_balance : 0;
+
+        // إحصائيات اليوم
+        $todayInvoicesCount = $store->invoices()->whereDate('created_at', today())->count();
+        $todaySales = $store->invoices()->whereDate('created_at', today())->sum('net_amount');
+        
+        // معاملات اليوم في الخزينة
+        $todayIncome = 0;
+        $todayExpenses = 0;
+        if ($treasury) {
+            $todayTransactions = $treasury->transactions()->whereDate('created_at', today())->get();
+            $todayIncome = $todayTransactions->where('type', 'income')->sum('amount');
+            $todayExpenses = $todayTransactions->where('type', 'expense')->sum('amount');
+        }
+
+        // منتجات قليلة المخزون
+        $lowStockProducts = $store->products()->whereColumn('quantity', '<=', 'min_quantity')->count();
+        
+        // طلبات صيانة معلقة
+        $pendingMaintenance = $store->maintenanceRequests()->where('status', 'pending')->count();
+        
+        // عمليات الإرجاع
+        $returnsCount = $store->returns()->count();
+
+        return view('superadmin.stores.show', compact(
+            'store', 'treasury', 'treasuryBalance', 'todayInvoicesCount', 
+            'todaySales', 'todayIncome', 'todayExpenses', 'lowStockProducts',
+            'pendingMaintenance', 'returnsCount'
+        ));
     }
 
     public function edit(Store $store)
