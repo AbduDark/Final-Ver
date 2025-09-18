@@ -1,0 +1,17 @@
+resources/views/admin/products/create.blade.php:            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+resources/views/cashier/dashboard.blade.php:                        <h3 class="mb-0">{{ number_format($todayRevenue, 2) }} ر.س</h3>
+resources/views/cashier/dashboard.blade.php:                                        <td>{{ number_format($invoice->net_amount, 2) }} ر.س</td>
+resources/views/cashier/dashboard.blade.php:                        <small>الفئة: ${product.category.name} | الكمية: ${product.quantity} | السعر: ${product.sale_price} ر.س</small>
+resources/views/cashier/invoices/create.blade.php:                        <span id="subtotal">0.00 ر.س</span>
+resources/views/cashier/invoices/create.blade.php:                        <span id="discountAmount">0.00 ر.س</span>
+resources/views/cashier/invoices/create.blade.php:                        <span id="taxAmount">0.00 ر.س</span>
+resources/views/cashier/invoices/create.blade.php:                        <strong id="total">0.00 ر.س</strong>
+resources/views/cashier/invoices/create.blade.php:                                <strong>${product.sale_price} ر.س</strong><br>
+resources/views/cashier/invoices/create.blade.php:            <td>${item.price.toFixed(2)} ر.س</td>
+resources/views/cashier/invoices/create.blade.php:            <td id="total-${item.id}">${(item.price * item.quantity).toFixed(2)} ر.س</td>
+resources/views/cashier/invoices/create.blade.php:    $(`#total-${itemId}`).text(`${total.toFixed(2)} ر.س`);
+resources/views/cashier/invoices/create.blade.php:    $('#subtotal').text(`${subtotal.toFixed(2)} ر.س`);
+resources/views/cashier/invoices/create.blade.php:    $('#discountAmount').text(`${discount.toFixed(2)} ر.س`);
+resources/views/cashier/invoices/create.blade.php:    $('#taxAmount').text(`${tax.toFixed(2)} ر.س`);
+resources/views/cashier/invoices/create.blade.php:    $('#total').text(`${total.toFixed(2)} ر.س`);
+resources/views/superadmin/dashboard.blade.php:            label: 'المبيعات (ر.س)',

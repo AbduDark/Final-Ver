@@ -165,11 +165,11 @@
                 <hr>
                 <div class="row text-center">
                     <div class="col-6">
-                        <h6 class="text-success">{{ $todayIncome }} ج.م</h6>
+                        <h6 class="text-success">{{ number_format($todayIncome, 2) }} ج.م</h6>
                         <small>إيرادات اليوم</small>
                     </div>
                     <div class="col-6">
-                        <h6 class="text-danger">{{ $todayExpenses }} ج.م</h6>
+                        <h6 class="text-danger">{{ number_format($todayExpenses, 2) }} ج.م</h6>
                         <small>مصروفات اليوم</small>
                     </div>
                 </div>

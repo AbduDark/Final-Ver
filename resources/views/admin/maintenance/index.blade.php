@@ -76,7 +76,7 @@
                                 {{ $request->status === 'completed' ? 'مكتمل' : ($request->status === 'in_progress' ? 'قيد العمل' : 'معلق') }}
                             </span>
                         </td>
-                        <td>{{ $request->cost ? number_format($request->cost, 2) . ' ريال' : 'غير محدد' }}</td>
+                        <td>{{ $request->cost ? number_format($request->cost, 2) . ' ج.م' : 'غير محدد' }}</td>
                         <td>{{ $request->created_at->format('Y-m-d') }}</td>
                         <td>
                             <div class="btn-group" role="group">

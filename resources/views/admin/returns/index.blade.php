@@ -57,7 +57,7 @@
                         <td>{{ $return->invoice->invoice_number }}</td>
                         <td>{{ $return->product->name }}</td>
                         <td>{{ $return->quantity }}</td>
-                        <td>{{ number_format($return->refund_amount, 2) }} ريال</td>
+                        <td>{{ number_format($return->refund_amount, 2) }} ج.م</td>
                         <td>{{ $return->reason }}</td>
                         <td>{{ $return->user->name }}</td>
                         <td>{{ $return->created_at->format('Y-m-d H:i') }}</td>

@@ -58,28 +58,28 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span>المجموع الفرعي:</span>
-                        <span id="subtotal">0.00 ر.س</span>
+                        <span id="subtotal">0.00 ج.م</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>الخصم:</span>
-                        <span id="discountAmount">0.00 ر.س</span>
+                        <span id="discountAmount">0.00 ج.م</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>الضريبة (15%):</span>
-                        <span id="taxAmount">0.00 ر.س</span>
+                        <span id="taxAmount">0.00 ج.م</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
                         <strong>المجموع النهائي:</strong>
-                        <strong id="total">0.00 ر.س</strong>
+                        <strong id="total">0.00 ج.م</strong>
                     </div>
-                    
+
                     <div class="mt-3">
                         <label for="discount" class="form-label">خصم إضافي</label>
-                        <input type="number" class="form-control" id="discount" name="discount" 
+                        <input type="number" class="form-control" id="discount" name="discount"
                                min="0" step="0.01" value="0" onchange="updateTotals()">
                     </div>
-                    
+
                     <div class="mt-3 d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fas fa-save me-2"></i>حفظ الفاتورة
@@ -99,7 +99,7 @@
                     <h5 class="card-title mb-0">البحث عن المنتجات</h5>
                 </div>
                 <div class="card-body">
-                    <input type="text" class="form-control" id="productSearch" 
+                    <input type="text" class="form-control" id="productSearch"
                            placeholder="ابحث عن منتج بالاسم أو الكود...">
                     <div id="searchResults" class="mt-3"></div>
                 </div>
@@ -150,7 +150,7 @@ $('#productSearch').on('keyup', function() {
             let html = '';
             products.forEach(function(product) {
                 html += `
-                    <div class="border p-2 mb-2 rounded product-item" style="cursor: pointer;" 
+                    <div class="border p-2 mb-2 rounded product-item" style="cursor: pointer;"
                          onclick="addProduct(${product.id}, '${product.name}', ${product.sale_price}, ${product.quantity})">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -158,7 +158,7 @@ $('#productSearch').on('keyup', function() {
                                 <small>الكود: ${product.code} | الفئة: ${product.category.name}</small>
                             </div>
                             <div class="text-end">
-                                <strong>${product.sale_price} ر.س</strong><br>
+                                <strong>${product.sale_price} ج.م</strong><br>
                                 <small>المتوفر: ${product.quantity}</small>
                             </div>
                         </div>
@@ -176,7 +176,7 @@ $('#productSearch').on('keyup', function() {
 function addProduct(productId, productName, price, availableQuantity) {
     // التحقق من وجود المنتج مسبقاً
     const existingItem = items.find(item => item.product_id == productId);
-    
+
     if (existingItem) {
         if (existingItem.quantity < availableQuantity) {
             existingItem.quantity++;
@@ -196,7 +196,7 @@ function addProduct(productId, productName, price, availableQuantity) {
         items.push(item);
         addItemRow(item);
     }
-    
+
     updateTotals();
     $('#productSearch').val('');
     $('#searchResults').html('');
@@ -210,14 +210,14 @@ function addItemRow(item) {
                 ${item.product_name}
                 <input type="hidden" name="items[${item.id}][product_id]" value="${item.product_id}">
             </td>
-            <td>${item.price.toFixed(2)} ر.س</td>
+            <td>${item.price.toFixed(2)} ج.م</td>
             <td>
-                <input type="number" class="form-control form-control-sm" 
-                       name="items[${item.id}][quantity]" value="${item.quantity}" 
-                       min="1" max="${item.available}" 
+                <input type="number" class="form-control form-control-sm"
+                       name="items[${item.id}][quantity]" value="${item.quantity}"
+                       min="1" max="${item.available}"
                        onchange="updateQuantity(${item.id}, this.value)">
             </td>
-            <td id="total-${item.id}">${(item.price * item.quantity).toFixed(2)} ر.س</td>
+            <td id="total-${item.id}">${(item.price * item.quantity).toFixed(2)} ج.م</td>
             <td>
                 <button type="button" class="btn btn-sm btn-danger" onclick="removeItem(${item.id})">
                     <i class="fas fa-trash"></i>
@@ -248,7 +248,7 @@ function updateQuantity(itemId, newQuantity) {
 function updateItemRow(itemId) {
     const item = items.find(i => i.id == itemId);
     const total = item.price * item.quantity;
-    $(`#total-${itemId}`).text(`${total.toFixed(2)} ر.س`);
+    $(`#total-${itemId}`).text(`${total.toFixed(2)} ج.م`);
     $(`input[name="items[${itemId}][quantity]"]`).val(item.quantity);
 }
 
@@ -256,11 +256,11 @@ function updateItemRow(itemId) {
 function removeItem(itemId) {
     items = items.filter(i => i.id != itemId);
     $(`#item-${itemId}`).remove();
-    
+
     if (items.length === 0) {
         $('#emptyMessage').show();
     }
-    
+
     updateTotals();
 }
 
@@ -270,11 +270,11 @@ function updateTotals() {
     let discount = parseFloat($('#discount').val()) || 0;
     let tax = (subtotal - discount) * 0.15;
     let total = subtotal - discount + tax;
-    
-    $('#subtotal').text(`${subtotal.toFixed(2)} ر.س`);
-    $('#discountAmount').text(`${discount.toFixed(2)} ر.س`);
-    $('#taxAmount').text(`${tax.toFixed(2)} ر.س`);
-    $('#total').text(`${total.toFixed(2)} ر.س`);
+
+    $('#subtotal').text(`${subtotal.toFixed(2)} ج.م`);
+    $('#discountAmount').text(`${discount.toFixed(2)} ج.م`);
+    $('#taxAmount').text(`${tax.toFixed(2)} ج.م`);
+    $('#total').text(`${total.toFixed(2)} ج.م`);
 }
 
 // حفظ وطباعة

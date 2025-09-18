@@ -252,7 +252,7 @@ const salesChart = new Chart(ctx, {
     data: {
         labels: {!! json_encode($weeklyChart->pluck('date')) !!},
         datasets: [{
-            label: 'المبيعات (ر.س)',
+            label: 'المبيعات (ج.م)',
             data: {!! json_encode($weeklyChart->pluck('total')) !!},
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',

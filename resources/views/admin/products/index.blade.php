@@ -70,8 +70,8 @@
                         <td>{{ $product->code }}</td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->category->name ?? 'غير محدد' }}</td>
-                        <td>{{ number_format($product->purchase_price, 2) }} ريال</td>
-                        <td>{{ number_format($product->sale_price, 2) }} ريال</td>
+                        <td>{{ number_format($product->purchase_price, 2) }} ج.م</td>
+                        <td>{{ number_format($product->sale_price, 2) }} ج.م</td>
                         <td>
                             <span class="badge bg-{{ $product->quantity <= $product->min_quantity ? 'danger' : 'success' }}">
                                 {{ $product->quantity }}
