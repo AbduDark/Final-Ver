@@ -10,15 +10,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // مسح جميع البيانات الحالية
-        User::truncate();
-        Store::truncate();
-        Treasury::truncate();
+        // // مسح جميع البيانات الحالية
+        // User::truncate();
+        // Store::truncate();
+        // Treasury::truncate();
 
         // إنشاء السوبر أدمن - أحمد السيسي
         $superAdmin = User::create([
             'name' => 'أحمد السيسي',
-            'email' => 'احمد_السيسي',
+            'email' => 'elsisi@admin.com',
             'password' => Hash::make('565656'),
             'type' => 'super_admin',
             'store_id' => null,
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         // إنشاء أدمن المتجر - Sayed7a3
         $storeAdmin = User::create([
             'name' => 'Sayed7a3',
-            'email' => 'Sayed7a3',
+            'email' => 'Sayed7a3@gmail.com',
             'password' => Hash::make('Sayed2511@'),
             'type' => 'admin',
             'store_id' => $store->id,
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
         // إنشاء كاشير المتجر
         $cashier = User::create([
             'name' => 'كاشير الواسطي',
-            'email' => 'كاشير_الواسطي',
+            'email' => 'cashier@cashier.com',
             'password' => Hash::make('12121212'),
             'type' => 'cashier',
             'store_id' => $store->id,
