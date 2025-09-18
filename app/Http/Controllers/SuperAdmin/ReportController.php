@@ -101,6 +101,163 @@ class ReportController extends Controller
         return view('superadmin.reports.activities', compact('activities'));
     }
 
+    public function profitLoss(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
+        $endDate = $request->get('end_date', Carbon::now());
+
+        // حساب الإيرادات
+        $revenues = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [$startDate, $endDate])
+            ->with(['store', 'items.product'])
+            ->get();
+
+        $totalRevenue = $revenues->sum('net_amount');
+        
+        // حساب التكلفة الفعلية للمنتجات المباعة
+        $totalCost = 0;
+        foreach($revenues as $invoice) {
+            foreach($invoice->items as $item) {
+                $totalCost += ($item->product->purchase_price * $item->quantity);
+            }
+        }
+
+        $grossProfit = $totalRevenue - $totalCost;
+        $profitMargin = $totalRevenue > 0 ? ($grossProfit / $totalRevenue) * 100 : 0;
+
+        // تفاصيل حسب المتاجر
+        $storesProfits = $revenues->groupBy('store_id')->map(function($storeInvoices) {
+            $storeRevenue = $storeInvoices->sum('net_amount');
+            $storeCost = 0;
+            
+            foreach($storeInvoices as $invoice) {
+                foreach($invoice->items as $item) {
+                    $storeCost += ($item->product->purchase_price * $item->quantity);
+                }
+            }
+            
+            return [
+                'store' => $storeInvoices->first()->store,
+                'revenue' => $storeRevenue,
+                'cost' => $storeCost,
+                'profit' => $storeRevenue - $storeCost,
+                'margin' => $storeRevenue > 0 ? (($storeRevenue - $storeCost) / $storeRevenue) * 100 : 0
+            ];
+        });
+
+        return view('superadmin.reports.profit-loss', compact(
+            'totalRevenue', 'totalCost', 'grossProfit', 'profitMargin', 
+            'storesProfits', 'startDate', 'endDate'
+        ));
+    }
+
+    public function topProducts(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
+        $endDate = $request->get('end_date', Carbon::now());
+        $limit = $request->get('limit', 20);
+
+        $topProducts = InvoiceItem::whereHas('invoice', function($query) use ($superAdmin, $startDate, $endDate) {
+            $query->whereHas('store', function($storeQuery) use ($superAdmin) {
+                $storeQuery->where('super_admin_id', $superAdmin->id);
+            })->whereBetween('created_at', [$startDate, $endDate]);
+        })->with(['product.store', 'invoice'])
+            ->selectRaw('product_id, SUM(quantity) as total_quantity, SUM(total_price) as total_sales, COUNT(*) as times_sold')
+            ->groupBy('product_id')
+            ->orderByDesc('total_sales')
+            ->limit($limit)
+            ->get();
+
+        return view('superadmin.reports.top-products', compact('topProducts', 'startDate', 'endDate', 'limit'));
+    }
+
+    public function customerAnalysis(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
+        $endDate = $request->get('end_date', Carbon::now());
+
+        $customerData = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [$startDate, $endDate])
+            ->whereNotNull('customer_name')
+            ->where('customer_name', '!=', '')
+            ->selectRaw('customer_name, customer_phone, COUNT(*) as visit_count, SUM(net_amount) as total_spent, AVG(net_amount) as average_order')
+            ->groupBy('customer_name', 'customer_phone')
+            ->orderByDesc('total_spent')
+            ->get();
+
+        $totalCustomers = $customerData->count();
+        $totalSpent = $customerData->sum('total_spent');
+        $averageOrderValue = $customerData->avg('average_order');
+
+        return view('superadmin.reports.customer-analysis', compact(
+            'customerData', 'totalCustomers', 'totalSpent', 'averageOrderValue', 'startDate', 'endDate'
+        ));
+    }
+
+    public function cashierPerformance(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
+        $endDate = $request->get('end_date', Carbon::now());
+
+        $cashierStats = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [$startDate, $endDate])
+            ->with(['user.store'])
+            ->selectRaw('user_id, COUNT(*) as total_invoices, SUM(net_amount) as total_sales, AVG(net_amount) as average_sale')
+            ->groupBy('user_id')
+            ->orderByDesc('total_sales')
+            ->get();
+
+        return view('superadmin.reports.cashier-performance', compact('cashierStats', 'startDate', 'endDate'));
+    }
+
+    public function dailyComparison(Request $request)
+    {
+        $superAdmin = auth()->user();
+        $days = $request->get('days', 30);
+        
+        $dailyData = Invoice::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereBetween('created_at', [Carbon::now()->subDays($days), Carbon::now()])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as invoice_count, SUM(net_amount) as daily_sales')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $averageDailySales = $dailyData->avg('daily_sales');
+        $bestDay = $dailyData->sortByDesc('daily_sales')->first();
+        $worstDay = $dailyData->sortBy('daily_sales')->first();
+
+        return view('superadmin.reports.daily-comparison', compact(
+            'dailyData', 'averageDailySales', 'bestDay', 'worstDay', 'days'
+        ));
+    }
+
+    public function lowStockAlert()
+    {
+        $superAdmin = auth()->user();
+        
+        $lowStockProducts = Product::whereHas('store', function($query) use ($superAdmin) {
+            $query->where('super_admin_id', $superAdmin->id);
+        })->whereColumn('quantity', '<=', 'min_quantity')
+            ->with(['store', 'category'])
+            ->orderBy('quantity')
+            ->get();
+
+        $criticalProducts = $lowStockProducts->where('quantity', 0);
+        $warningProducts = $lowStockProducts->where('quantity', '>', 0);
+
+        return view('superadmin.reports.low-stock-alert', compact(
+            'lowStockProducts', 'criticalProducts', 'warningProducts'
+        ));
+    }
+
     public function weekly(Request $request)
     {
         $superAdmin = auth()->user();

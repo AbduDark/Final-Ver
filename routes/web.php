@@ -51,6 +51,12 @@ Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(fun
         Route::get('/reports/monthly', [App\Http\Controllers\SuperAdmin\ReportController::class, 'monthly'])->name('superadmin.reports.monthly');
         Route::get('/reports/inventory', [App\Http\Controllers\SuperAdmin\ReportController::class, 'inventory'])->name('superadmin.reports.inventory');
         Route::get('/reports/activities', [App\Http\Controllers\SuperAdmin\ReportController::class, 'activities'])->name('superadmin.reports.activities');
+        Route::get('/reports/profit-loss', [App\Http\Controllers\SuperAdmin\ReportController::class, 'profitLoss'])->name('superadmin.reports.profit-loss');
+        Route::get('/reports/top-products', [App\Http\Controllers\SuperAdmin\ReportController::class, 'topProducts'])->name('superadmin.reports.top-products');
+        Route::get('/reports/customer-analysis', [App\Http\Controllers\SuperAdmin\ReportController::class, 'customerAnalysis'])->name('superadmin.reports.customer-analysis');
+        Route::get('/reports/cashier-performance', [App\Http\Controllers\SuperAdmin\ReportController::class, 'cashierPerformance'])->name('superadmin.reports.cashier-performance');
+        Route::get('/reports/daily-comparison', [App\Http\Controllers\SuperAdmin\ReportController::class, 'dailyComparison'])->name('superadmin.reports.daily-comparison');
+        Route::get('/reports/low-stock-alert', [App\Http\Controllers\SuperAdmin\ReportController::class, 'lowStockAlert'])->name('superadmin.reports.low-stock-alert');
         Route::get('/reports/maintenance', [App\Http\Controllers\SuperAdmin\ReportController::class, 'maintenanceReport'])->name('superadmin.reports.maintenance');
     });
 });

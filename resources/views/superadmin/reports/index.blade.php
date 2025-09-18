@@ -118,6 +118,84 @@
             </div>
         </div>
     </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-pie fa-3x text-success mb-3"></i>
+                <h5 class="card-title">تقرير الأرباح والخسائر</h5>
+                <p class="card-text">تحليل مفصل للأرباح والتكاليف</p>
+                <a href="{{ route('superadmin.reports.profit-loss') }}" class="btn btn-success">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">أفضل المنتجات</h5>
+                <p class="card-text">المنتجات الأكثر مبيعاً وربحية</p>
+                <a href="{{ route('superadmin.reports.top-products') }}" class="btn btn-warning">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x text-info mb-3"></i>
+                <h5 class="card-title">تحليل العملاء</h5>
+                <p class="card-text">إحصائيات وسلوك العملاء</p>
+                <a href="{{ route('superadmin.reports.customer-analysis') }}" class="btn btn-info">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-user-tie fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">أداء الكاشيرز</h5>
+                <p class="card-text">تقييم أداء موظفي المبيعات</p>
+                <a href="{{ route('superadmin.reports.cashier-performance') }}" class="btn btn-primary">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check fa-3x text-secondary mb-3"></i>
+                <h5 class="card-title">المقارنة اليومية</h5>
+                <p class="card-text">مقارنة الأداء اليومي للمبيعات</p>
+                <a href="{{ route('superadmin.reports.daily-comparison') }}" class="btn btn-secondary">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">تنبيهات المخزون</h5>
+                <p class="card-text">المنتجات قليلة أو منتهية المخزون</p>
+                <a href="{{ route('superadmin.reports.low-stock-alert') }}" class="btn btn-danger">
+                    عرض التقرير
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row mt-4">
