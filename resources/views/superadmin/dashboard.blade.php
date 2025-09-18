@@ -175,6 +175,40 @@
     </div>
     
     <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    الإشعارات 
+                    @if($unreadCount > 0)
+                        <span class="badge bg-danger">{{ $unreadCount }}</span>
+                    @endif
+                </h5>
+            </div>
+            <div class="card-body">
+                @if($unreadNotifications->count() > 0)
+                    @foreach($unreadNotifications as $notification)
+                    <div class="notification-item mb-3 p-2 border rounded">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>{{ $notification->title }}</strong><br>
+                                <small>{{ $notification->message }}</small><br>
+                                <small class="text-muted">{{ $notification->store->name }} - {{ $notification->created_at->diffForHumans() }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="markAsRead({{ $notification->id }})">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                    @endforeach
+                    <div class="text-center">
+                        <a href="{{ route('superadmin.notifications.index') }}" class="btn btn-sm btn-primary">عرض جميع الإشعارات</a>
+                    </div>
+                @else
+                    <p class="text-muted text-center">لا توجد إشعارات جديدة</p>
+                @endif
+            </div>
+        </div>
+        
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">آخر الأنشطة</h5>
@@ -268,5 +302,38 @@ const salesChart = new Chart(ctx, {
         }
     }
 });
+
+// وظائف الإشعارات
+function markAsRead(notificationId) {
+    fetch(`/superadmin/notifications/${notificationId}/read`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+// تحديث الإشعارات كل 30 ثانية
+setInterval(function() {
+    fetch('/superadmin/notifications/unread')
+        .then(response => response.json())
+        .then(notifications => {
+            // تحديث عدد الإشعارات
+            const badge = document.querySelector('.badge.bg-danger');
+            if (badge) {
+                badge.textContent = notifications.length;
+                if (notifications.length === 0) {
+                    badge.style.display = 'none';
+                }
+            }
+        });
+}, 30000);
 </script>
 @endpush

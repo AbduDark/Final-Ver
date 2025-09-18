@@ -115,6 +115,32 @@
     </div>
 </div>
 
+<!-- الإشعارات -->
+@if($notifications->count() > 0)
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning">
+                <h5 class="card-title mb-0 text-dark">
+                    <i class="fas fa-bell me-2"></i>
+                    الإشعارات ({{ $notifications->count() }})
+                </h5>
+            </div>
+            <div class="card-body">
+                @foreach($notifications as $notification)
+                <div class="alert alert-{{ $notification->type == 'low_stock' ? 'warning' : 'info' }} alert-dismissible">
+                    <strong>{{ $notification->title }}</strong><br>
+                    {{ $notification->message }}
+                    <small class="d-block text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                    <button type="button" class="btn-close" onclick="markNotificationAsRead({{ $notification->id }})"></button>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- آخر الفواتير -->
 <div class="row">
     <div class="col-12">

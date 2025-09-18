@@ -58,6 +58,17 @@ Route::prefix('superadmin')->middleware(['auth', 'role:super_admin'])->group(fun
         Route::get('/reports/daily-comparison', [App\Http\Controllers\SuperAdmin\ReportController::class, 'dailyComparison'])->name('superadmin.reports.daily-comparison');
         Route::get('/reports/low-stock-alert', [App\Http\Controllers\SuperAdmin\ReportController::class, 'lowStockAlert'])->name('superadmin.reports.low-stock-alert');
         Route::get('/reports/maintenance', [App\Http\Controllers\SuperAdmin\ReportController::class, 'maintenanceReport'])->name('superadmin.reports.maintenance');
+        
+        // التقارير المالية المفصلة
+        Route::get('/reports/financial/profit-loss', [App\Http\Controllers\SuperAdmin\FinancialReportController::class, 'profitLoss'])->name('superadmin.reports.financial.profit-loss');
+        Route::get('/reports/financial/cash-flow', [App\Http\Controllers\SuperAdmin\FinancialReportController::class, 'cashFlow'])->name('superadmin.reports.financial.cash-flow');
+        Route::get('/reports/financial/summary', [App\Http\Controllers\SuperAdmin\FinancialReportController::class, 'financialSummary'])->name('superadmin.reports.financial.summary');
+    });
+
+    // الإشعارات
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [App\Http\Controllers\SuperAdmin\NotificationController::class, 'index'])->name('superadmin.notifications.index');
+        Route::post('/{notification}/read', [App\Http\Controllers\SuperAdmin\NotificationController::class, 'markAsRead'])->name('superadmin.notifications.read');
     });
 });
 

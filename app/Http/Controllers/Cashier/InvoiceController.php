@@ -187,17 +187,20 @@ class InvoiceController extends Controller
 
     public function searchProducts(Request $request)
     {
-        $search = $request->get('q');
-        $user = auth()->user();
+        $query = $request->get('q');
+        $storeId = auth()->user()->store_id;
 
-        $products = Product::where('store_id', $user->store_id)
-            ->where(function($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('code', 'like', "%{$search}%");
-            })
+        // استعلام محسن مع الفهارس
+        $products = Product::select(['id', 'name', 'code', 'sale_price', 'quantity', 'category_id'])
+            ->where('store_id', $storeId)
             ->where('quantity', '>', 0)
-            ->with('category')
-            ->limit(20)
+            ->where(function($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('code', 'LIKE', "%{$query}%");
+            })
+            ->with('category:id,name')
+            ->orderBy('name')
+            ->limit(10)
             ->get();
 
         return response()->json($products);
