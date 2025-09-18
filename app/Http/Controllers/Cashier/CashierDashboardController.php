@@ -12,38 +12,52 @@ class CashierDashboardController extends Controller
     {
         $user = auth()->user();
         $store = $user->store;
+        $today = Carbon::today();
 
-        // إحصائيات سريعة
-        $todayInvoices = Invoice::where('store_id', $store->id)
+        // استعلام محسن للإحصائيات اليومية
+        $todayStats = Invoice::select([
+                DB::raw('COUNT(*) as invoice_count'),
+                DB::raw('SUM(net_amount) as revenue')
+            ])
+            ->where('store_id', $store->id)
             ->where('user_id', $user->id)
-            ->whereDate('created_at', Carbon::today())
-            ->count();
+            ->whereDate('created_at', $today)
+            ->first();
 
-        $todayRevenue = Invoice::where('store_id', $store->id)
-            ->where('user_id', $user->id)
-            ->whereDate('created_at', Carbon::today())
-            ->sum('net_amount');
+        $todayInvoices = $todayStats->invoice_count ?? 0;
+        $todayRevenue = $todayStats->revenue ?? 0;
 
+        // استعلام محسن للتحويلات المعلقة
         $pendingTransfers = Transfer::where('store_id', $store->id)
             ->where('status', 'pending')
             ->count();
 
-        // آخر الفواتير لهذا الكاشير
-        $recentInvoices = Invoice::where('store_id', $store->id)
+        // آخر الفواتير مع التحسين
+        $recentInvoices = Invoice::select(['id', 'invoice_number', 'customer_name', 'net_amount', 'created_at'])
+            ->where('store_id', $store->id)
             ->where('user_id', $user->id)
-            ->with('items.product')
             ->latest()
             ->limit(10)
             ->get();
 
-        // المنتجات منخفضة المخزون
+        // عدد المنتجات منخفضة المخزون
         $lowStockProducts = Product::where('store_id', $store->id)
             ->whereColumn('quantity', '<=', 'min_quantity')
             ->count();
 
+        // الإشعارات الخاصة بالكاشير
+        $notifications = Notification::where('store_id', $store->id)
+            ->where(function($query) use ($user) {
+                $query->where('user_id', $user->id)->orWhereNull('user_id');
+            })
+            ->whereNull('read_at')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
         return view('cashier.dashboard', compact(
             'store', 'todayInvoices', 'todayRevenue',
-            'pendingTransfers', 'recentInvoices', 'lowStockProducts'
+            'pendingTransfers', 'recentInvoices', 'lowStockProducts', 'notifications'
         ));
     }
 }

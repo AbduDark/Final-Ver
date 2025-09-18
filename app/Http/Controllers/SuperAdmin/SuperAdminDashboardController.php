@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Store, User, Invoice, Product, MaintenanceRequest};
+use App\Models\{Store, User, Invoice, Product, MaintenanceRequest, Notification};
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,23 @@ class SuperAdminDashboardController extends Controller
             ->orderBy('date')
             ->get();
 
+        // الإشعارات الغير مقروءة
+        $unreadNotifications = Notification::whereHas('store', function($query) use ($user) {
+            $query->where('super_admin_id', $user->id);
+        })->whereNull('read_at')
+          ->with('store')
+          ->orderBy('created_at', 'desc')
+          ->take(5)
+          ->get();
+
+        $unreadCount = Notification::whereHas('store', function($query) use ($user) {
+            $query->where('super_admin_id', $user->id);
+        })->whereNull('read_at')->count();
+
         return view('superadmin.dashboard', compact(
             'totalStores', 'totalUsers', 'todayRevenue', 'monthlyRevenue',
-            'pendingMaintenance', 'recentActivities', 'storesStats', 'weeklyChart'
+            'pendingMaintenance', 'recentActivities', 'storesStats', 'weeklyChart',
+            'unreadNotifications', 'unreadCount'
         ));
     }
 }
